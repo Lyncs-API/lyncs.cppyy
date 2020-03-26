@@ -1,2 +1,3 @@
-# lyncs.cppyy
-Wrapper to cppyy used by the Lyncs API
+# Cppyy interface for Lyncs
+
+In this package we provide some tools for interfacing to cppyy used by Lyncs.
