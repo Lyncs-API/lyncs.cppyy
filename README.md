@@ -6,11 +6,8 @@
 [![build & test](https://img.shields.io/github/workflow/status/Lyncs-API/lyncs.cppyy/build%20&%20test?logo=github)](https://github.com/Lyncs-API/lyncs.cppyy/actions)
 [![codecov](https://img.shields.io/codecov/c/github/Lyncs-API/lyncs.cppyy?logo=codecov)](https://codecov.io/gh/Lyncs-API/lyncs.cppyy)
 
-[comment]: <> (Definition of some common links)
-[cppyy]: https://cppyy.readthedocs.io/en/latest/
 
-
-In this package we provide some additional tools for the usage of [cppyy] into the Lyncs API.
+In this package we provide some additional tools for the usage of [cppyy] in the Lyncs API.
 
 ## Installation
 
@@ -26,8 +23,8 @@ The main documentation of [cppyy] is available at https://cppyy.readthedocs.io/e
 
 > cppyy is an automatic, run-time, Python-C++ bindings generator, for calling C++ from Python [...]
 
-Lyncs_cppyy is an interfacing layers between cppyy and the interfaces to the libraries.
-In the following an overview of the additional functionalities:
+Lyncs_cppyy is an additional layer between cppyy and the interfaces to libraries provided by Lyncs.
+In the following we give an overview of the additional functionalities.
 
 ### Lib class
 
@@ -42,7 +39,7 @@ In cppyy, libraries are loaded and used as follow:
 >>>
 ```
 
-In lyncs_cppyy for holding all the information on a library we define the class Lib that can be used as follow
+In lyncs_cppyy we have define the class Lib for holding the information on a library. It is used as follow
 
 ```python
 >>> from lyncs_cppyy import Lib
@@ -52,11 +49,11 @@ In lyncs_cppyy for holding all the information on a library we define the class 
 >>>
 ```
 
-Lib returns a variable that acts as library holder.
+Lib returns a variable that represents the library.
 The library is loaded at the first usage of the variable.
 In most of the cases, accessing attributes of the variable is like accessing attributed of `cppyy.gbl`.
-Exceptions are the following options of Lib, e.g. `zlib.header -> ['zlib.h']`,
-or macros defined in the header, e.g. `zlib.ZLIB_VERSION -> '1.2.11'`.
+Exceptions are made for the following options of Lib, e.g. `zlib.header -> ['zlib.h']`,
+or for macros defined in the header, e.g. `zlib.ZLIB_VERSION -> '1.2.11'`.
 This latter feature is not supported by cppyy.gbl.
 
 The list of options of `Lib` are:
@@ -82,3 +79,4 @@ The list of options of `Lib` are:
 - `redefined`: dictionary of redefined symbols. See [Redefining symbols to avoid conflicts].
 
 
+[cppyy]: https://cppyy.readthedocs.io/en/latest/

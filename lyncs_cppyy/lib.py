@@ -1,3 +1,8 @@
+"""
+A Lib class for managing shared libraries
+"""
+# pylint: disable=C0303,C0330
+
 import os
 import cppyy
 
@@ -5,6 +10,34 @@ __all__ = ["Lib"]
 
 
 class Lib:
+    """
+    Lib can be used for managing shared libraries.
+    
+    Lib returns a variable that represents the library.
+    The library is loaded at the first usage of the variable.
+    In most of the cases, accessing attributes of the variable 
+    is like accessing attributed of `cppyy.gbl`.
+    Exceptions are made for the attributes in __slots__
+    or for macros defined in the loaded header.
+    This latter feature is not supported by cppyy.gbl.
+    
+    Example
+    -------
+    
+    >>> from lyncs_cppyy import Lib
+    >>> zlib = Lib(header='zlib.h', library='libz', check='zlibVersion') 
+    >>> zlib.zlibVersion()
+     '1.2.11'
+    
+    The above is the equivalent of the following with cppyy
+
+    >>> import cppyy
+    >>> cppyy.include('zlib.h')        # bring in C++ definitions
+    >>> cppyy.load_library('libz')     # load linker symbols
+    >>> cppyy.gbl.zlibVersion()        # use a zlib API
+     '1.2.11'
+    """
+
     __slots__ = [
         "_cwd",
         "path",
@@ -62,7 +95,7 @@ class Lib:
         self.include = [include] if isinstance(include, str) else include or []
         self.c_include = c_include
         self.namespace = [namespace] if isinstance(namespace, str) else namespace or []
-        self.redefined = dict(redefined) or {}
+        self.redefined = redefined or {}
 
         if self.redefined:
             self.check = [self.redefined.get(check, check) for check in self.check]
@@ -126,6 +159,7 @@ class Lib:
         return self.lib
 
     def define(self):
+        "Defines the list of values in redefined"
         cpp = ""
         for key, val in self.redefined.items():
             cpp += f"#define {key} {val}\n"
@@ -133,6 +167,7 @@ class Lib:
             cppyy.cppdef(cpp)
 
     def undef(self):
+        "Undefines the list of values in redefined"
         cpp = ""
         for key in self.redefined:
             cpp += f"#undef {key}\n"

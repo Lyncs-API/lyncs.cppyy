@@ -25,7 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
-        pip install -r requirements.txt
+        pip install lyncs_setuptools
         
     - name: Install and upload if not up to date
       env:
@@ -44,7 +44,32 @@ jobs:
 
     - name: Run tests
       run: |
-        pip install lyncs_cppyy[test]==$(lyncs_setuptools version)
+        pip install lyncs_cppyy[all]==$(lyncs_setuptools version)
         pytest -v --cov=lyncs_cppyy --cov-report=xml
         export CODECOV_TOKEN="${{ secrets.CODECOV_TOKEN }}"
         bash <(curl -s https://codecov.io/bash) -f ./coverage.xml -n lyncs_cppyy
+
+  clean-run:
+    
+    needs: build-n-publish
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Installing
+      run: |
+        python -m pip install --upgrade pip
+        pip install lyncs_cppyy[all]
+        
+    - name: Test with pytest
+      run: |
+        pytest -v
