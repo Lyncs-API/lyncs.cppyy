@@ -1,6 +1,7 @@
 """
 Additional low-level functions to the one provided by cppyy
 """
+# pylint: disable=C0303
 
 from itertools import product
 
