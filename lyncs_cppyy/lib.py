@@ -62,7 +62,7 @@ class Lib:
         self.include = [include] if isinstance(include, str) else include or []
         self.c_include = c_include
         self.namespace = [namespace] if isinstance(namespace, str) else namespace or []
-        self.redefined = dict(redefined) or {}
+        self.redefined = redefined or {}
 
         if self.redefined:
             self.check = [self.redefined.get(check, check) for check in self.check]
