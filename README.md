@@ -6,9 +6,6 @@
 [![build & test](https://img.shields.io/github/workflow/status/Lyncs-API/lyncs.cppyy/build%20&%20test?logo=github)](https://github.com/Lyncs-API/lyncs.cppyy/actions)
 [![codecov](https://img.shields.io/codecov/c/github/Lyncs-API/lyncs.cppyy?logo=codecov)](https://codecov.io/gh/Lyncs-API/lyncs.cppyy)
 
-[comment]: <> (Definition of some common links)
-[cppyy]: https://cppyy.readthedocs.io/en/latest/
-
 
 In this package we provide some additional tools for the usage of [cppyy] in the Lyncs API.
 
@@ -82,3 +79,4 @@ The list of options of `Lib` are:
 - `redefined`: dictionary of redefined symbols. See [Redefining symbols to avoid conflicts].
 
 
+[cppyy]: https://cppyy.readthedocs.io/en/latest/
