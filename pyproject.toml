@@ -1,0 +1,2 @@
+[build-system]
+requires = ["lyncs_setuptools"]
