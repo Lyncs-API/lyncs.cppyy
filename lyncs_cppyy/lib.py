@@ -33,18 +33,20 @@ class Lib:
 
         Parameters
         ----------
-        path: str or list
-          Path(s) where to look for headers and libraries.
-          Headers are searched in path+"/include" and libraries in path+"/lib".
         header: str or list
           Header(s) file to include.
         library: str or list
           Library(s) file to include. Also absolute paths are accepted.
         check: str or list
           Check function(s) to look for in the library to test if it has been loaded.
+        include: str or list
+          Path(s) to be included. Equivalent to `-I` used at compile time. 
+        path: str or list
+          Path(s) where to look for headers and libraries.
+          Headers are searched in path+"/include" and libraries in path+"/lib".
         c_include: bool
           Whether the library is a c library (False means it is a c++ library).
-        namespace: str
+        namespace: str or list
           Namespace used across the library. Directly access object inside namespace.
           Similar to `using namespace ...` in c++.
         redefined: dict
@@ -60,7 +62,7 @@ class Lib:
         self.include = [include] if isinstance(include, str) else include or []
         self.c_include = c_include
         self.namespace = [namespace] if isinstance(namespace, str) else namespace or []
-        self.redefined = redefined or {}
+        self.redefined = dict(redefined) or {}
 
         if self.redefined:
             self.check = [self.redefined.get(check, check) for check in self.check]
@@ -97,6 +99,11 @@ class Lib:
         for library in self.library:
             if not isinstance(library, str):
                 continue
+            try:
+                cppyy.load_library(library)
+                continue
+            except RuntimeError:
+                pass
             tmp = library
             if not tmp.startswith(os.sep):
                 tmp = self._cwd + "/" + tmp
@@ -167,35 +174,18 @@ class Lib:
                     pass
         setattr(self.lib, key, value)
 
-    @property
-    def fopen(self):
-        """
-        This fixes the cppyy's issue due to the use of __restrict__ in fopen.
-        ```
-        NotImplementedError: _IO_FILE* ::fopen(const char*__restrict __filename, const char*__restrict __modes) =>
-        NotImplementedError: could not convert argument 1 (this method cannot (yet) be called)
-        ```
-        """
-        try:
-            return self.lib.fopen_without_restrict
-        except AttributeError:
-            assert cppyy.cppdef(
-                """
-                FILE* fopen_without_restrict( const char * filename, const char * mode ) {
-                  return fopen(filename, mode);
-                }
-                """
-            ), "Couldn't define fopen_without_restrict"
-            return self.fopen_without_restrict
-
     def get_macro(self, key):
+        "Returns the value of a defined macro by assigning it to a variable"
         try:
             return getattr(self.lib, "_" + key)
-        except AttributeError:
-            assert cppyy.cppdef(
-                """
-            auto _%s = %s;
-            """
-                % (key, key)
-            ), ("%s is not a defined macro" % key)
-            return self.get_macro(key)
+        except AttributeError as err:
+            try:
+                cppyy.cppdef(
+                    """
+                    auto _%s = %s;
+                    """
+                    % (key, key)
+                )
+                return self.get_macro(key)
+            except SyntaxError:
+                raise err
