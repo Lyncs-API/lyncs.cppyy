@@ -1,2 +1,3 @@
 [build-system]
-requires = ["lyncs_setuptools"]
+requires = ["setuptools >= 40.6.0", "wheel", "lyncs_setuptools"]
+build-backend = "setuptools.build_meta"
