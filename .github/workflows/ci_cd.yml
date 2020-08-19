@@ -25,7 +25,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
-        pip install pytest pytest-cov
         pip install -r requirements.txt
         
     - name: Install and upload if not up to date
@@ -45,6 +44,7 @@ jobs:
 
     - name: Run tests
       run: |
+        pip install lyncs_cppyy[test]==$(lyncs_setuptools version)
         pytest -v --cov=lyncs_cppyy --cov-report=xml
         export CODECOV_TOKEN="${{ secrets.CODECOV_TOKEN }}"
         bash <(curl -s https://codecov.io/bash) -f ./coverage.xml -n lyncs_cppyy
