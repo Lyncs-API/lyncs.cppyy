@@ -1,3 +1,4 @@
+import glob
 from lyncs_setuptools import setup
 
 setup(
@@ -5,4 +6,5 @@ setup(
     install_requires=["cppyy", "numpy"],
     keywords=["Lyncs", "cppyy",],
     extras_require={"test": ["pytest", "pytest-cov", "meson", "ninja",]},
+    data_files=[("test/cnumbers", glob.glob('test/cnumbers/*'))],
 )
