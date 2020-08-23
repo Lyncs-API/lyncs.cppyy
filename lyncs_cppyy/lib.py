@@ -207,6 +207,7 @@ class Lib:
                     return setattr(getattr(self.lib, namespace), key, value)
                 except AttributeError:
                     pass
+        getattr(self.lib, key)
         setattr(self.lib, key, value)
 
     def get_macro(self, key):
