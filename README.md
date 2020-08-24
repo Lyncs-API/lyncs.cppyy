@@ -44,8 +44,8 @@ In lyncs_cppyy we have define the class Lib for holding the information on a lib
 
 ```python
 >>> from lyncs_cppyy import Lib
->>> zlib = Lib(header = 'zlib.h', library = 'libz', check = 'zlibVersion') 
->>> zlib.zlibVersion()             # use a zlib API
+>>> zlib = Lib(header = 'zlib.h', library = 'libz')
+>>> zlib.zlibVersion()
 '1.2.11'
 >>>
 ```
