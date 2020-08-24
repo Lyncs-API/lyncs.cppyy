@@ -59,9 +59,9 @@ This latter feature is not supported by cppyy.gbl.
 
 The list of options of `Lib` are:
 
-- `header`: (required) string(or list) of the header(s) to be included.
+- `header`: string(or list) of the header(s) to be included.
 
-- `check`: (required) string(or list) of the function(s) to be checked for inclusion.
+- `check`: string(or list) of the function(s) to be checked for inclusion.
   This is needed to determine if the library has been already loaded or not.
 
 - `library`: string(or list) of the shared library(ies) to be loaded.
