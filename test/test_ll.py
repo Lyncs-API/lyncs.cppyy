@@ -23,7 +23,6 @@ def test_to_pointer():
     arr = numpy.arange(10)
     ptr = ll.to_pointer(arr.__array_interface__["data"][0], "long*")
     ptr.reshape((10,))
-    print(list(ptr))
     assert (arr == list(ptr)).all()
 
 
