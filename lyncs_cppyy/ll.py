@@ -13,7 +13,8 @@ from cppyy import cppdef, gbl, sizeof
 
 from .numpy import char_map
 
-__all__ = __all__ + [
+__all__ += [
+    "array_to_pointers",
     "to_pointer",
     "assign",
 ]
@@ -94,8 +95,8 @@ def assign(ptr, val):
     except AttributeError:
         assert cppdef(
             """
-            template<typename T>
-            void _assign( T* ptr, T&& val ) {
+            template<typename T1,typename T2>
+            void _assign( T1* ptr, T2&& val ) {
               *ptr = val;
             }
             """
