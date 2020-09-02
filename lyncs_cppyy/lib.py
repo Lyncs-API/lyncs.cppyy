@@ -53,6 +53,7 @@ class Lib:
 
     @staticmethod
     def parse_arg(arg, name, types=str):
+        "Auxiliary function for formatting the arguments"
         arg = () if arg is None else (arg,) if isinstance(arg, types) else tuple(arg)
         if not all((isinstance(_, types) for _ in arg)):
             raise TypeError(
@@ -219,6 +220,9 @@ class Lib:
             return getattr(type(self), key).__set__(self, value)
         except AttributeError:
             pass
+
+        if not self.loaded:
+            self.load()
 
         if self.redefined:
             key = self.redefined.get(key, key)
