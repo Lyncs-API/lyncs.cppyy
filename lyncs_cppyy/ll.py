@@ -62,7 +62,7 @@ def array_to_pointers(arr):
             size *= shape[i] + 1
     if size == 0:
         return PointersArray(ptr, shape, ctype)
-    res = PointersArray(addressof(array_new["void*"](size)), shape, ctype, delete=True)
+    res = PointersArray(addressof(array_new["void**"](size)), shape, ctype, delete=True)
     skip = shape[0]
     ranges = []
     for i in range(len(shape) - 1):
