@@ -1,11 +1,11 @@
-# Cppyy interface for Lyncs
+# cppyy wrapper for Lyncs
 
 [![python](https://img.shields.io/pypi/pyversions/lyncs_cppyy.svg?logo=python&logoColor=white)](https://pypi.org/project/lyncs_cppyy/)
 [![pypi](https://img.shields.io/pypi/v/lyncs_cppyy.svg?logo=python&logoColor=white)](https://pypi.org/project/lyncs_cppyy/)
 [![license](https://img.shields.io/github/license/Lyncs-API/lyncs.cppyy?logo=github&logoColor=white)](https://github.com/Lyncs-API/lyncs.cppyy/blob/master/LICENSE)
 [![build & test](https://img.shields.io/github/workflow/status/Lyncs-API/lyncs.cppyy/build%20&%20test?logo=github&logoColor=white)](https://github.com/Lyncs-API/lyncs.cppyy/actions)
 [![codecov](https://img.shields.io/codecov/c/github/Lyncs-API/lyncs.cppyy?logo=codecov&logoColor=white)](https://codecov.io/gh/Lyncs-API/lyncs.cppyy)
-[![pylint]]
+[![pylint](https://img.shields.io/badge/pylint%20score-9.4%2F10-green?logo=python&logoColor=white)](http://pylint.pycqa.org/)
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg?logo=codefactor&logoColor=white)](https://github.com/ambv/black)
 
 
