@@ -12,23 +12,23 @@ __all__ = ["Lib"]
 class Lib:
     """
     Lib can be used for managing shared libraries.
-    
+
     Lib returns a variable that represents the library.
     The library is loaded at the first usage of the variable.
-    In most of the cases, accessing attributes of the variable 
+    In most of the cases, accessing attributes of the variable
     is like accessing attributed of `cppyy.gbl`.
     Exceptions are made for the attributes in __slots__
     or for macros defined in the loaded header.
     This latter feature is not supported by cppyy.gbl.
-    
+
     Example
     -------
-    
+
     >>> from lyncs_cppyy import Lib
-    >>> zlib = Lib(header='zlib.h', library='libz') 
+    >>> zlib = Lib(header='zlib.h', library='libz')
     >>> zlib.zlibVersion()
      '1.2.11'
-    
+
     The above is the equivalent of the following with cppyy
 
     >>> import cppyy
@@ -53,6 +53,7 @@ class Lib:
 
     @staticmethod
     def parse_arg(arg, name, types=str):
+        "Auxiliary function for formatting the arguments"
         arg = () if arg is None else (arg,) if isinstance(arg, types) else tuple(arg)
         if not all((isinstance(_, types) for _ in arg)):
             raise TypeError(
@@ -83,7 +84,7 @@ class Lib:
         check: str or list
           Check function(s) to look for in the library to test if it has been loaded.
         include: str or list
-          Path(s) to be included. Equivalent to `-I` used at compile time. 
+          Path(s) to be included. Equivalent to `-I` used at compile time.
         path: str or list
           Path(s) where to look for headers and libraries.
           Headers are searched in path+"/include" and libraries in path+"/lib".
@@ -219,6 +220,9 @@ class Lib:
             return getattr(type(self), key).__set__(self, value)
         except AttributeError:
             pass
+
+        if not self.loaded:
+            self.load()
 
         if self.redefined:
             key = self.redefined.get(key, key)

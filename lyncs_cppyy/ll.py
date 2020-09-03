@@ -47,7 +47,7 @@ class PointersArray:
 def array_to_pointers(arr):
     """
     Returns a pointer to a list of pointer that can be used
-    for accessing array elements as ptr[i][j][k] depending 
+    for accessing array elements as ptr[i][j][k] depending
     on the shape of the array
     """
     size = 0
@@ -62,7 +62,7 @@ def array_to_pointers(arr):
             size *= shape[i] + 1
     if size == 0:
         return PointersArray(ptr, shape, ctype)
-    res = PointersArray(addressof(array_new["void*"](size)), shape, ctype, delete=True)
+    res = PointersArray(addressof(array_new["void**"](size)), shape, ctype, delete=True)
     skip = shape[0]
     ranges = []
     for i in range(len(shape) - 1):
