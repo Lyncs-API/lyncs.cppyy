@@ -1,5 +1,4 @@
 "Utils for interfacing to numpy"
-# pylint: disable=C0103
 
 __all__ = [
     "dtype_map",
@@ -43,4 +42,4 @@ dtype_map = (
     (np.complex128, "double complex"),
 )
 
-char_map = dict((dtype().dtype.char, ctype) for dtype, ctype in dtype_map)
+char_map = {dtype(0).dtype.char: ctype for dtype, ctype in dtype_map}
