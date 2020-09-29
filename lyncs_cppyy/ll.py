@@ -4,16 +4,19 @@ Additional low-level functions to the one provided by cppyy
 # pylint: disable=C0303
 
 from itertools import product
-
+from deprecated import deprecated
 from cppyy.ll import __all__
 
-# from cppyy.ll import *
-from cppyy.ll import cast, malloc, free, array_new, array_delete, addressof
+# patch
+if "set_signals_as_exceptionFatalErrorBusError" in __all__:
+    __all__.remove("set_signals_as_exceptionFatalErrorBusError")
+
+from cppyy.ll import *
 from cppyy import cppdef, gbl, sizeof
 
 from .numpy import char_map
 
-__all__ += [
+__all__ = list(__all__) + [
     "array_to_pointers",
     "to_pointer",
     "assign",
@@ -47,7 +50,7 @@ class PointersArray:
 def array_to_pointers(arr):
     """
     Returns a pointer to a list of pointer that can be used
-    for accessing array elements as ptr[i][j][k] depending
+    for accessing array elements as `ptr[i][j][k]` depending
     on the shape of the array
     """
     size = 0
@@ -83,22 +86,27 @@ def array_to_pointers(arr):
     return res
 
 
-def to_pointer(ptr: int, ctype: str = "void *"):
+def to_pointer(ptr: int, ctype: str = "void *", size=1):
     "Casts integer to void pointer"
-    return cast[ctype](ptr)
+    ptr = cast[ctype](ptr)
+    ptr.reshape((size,))
+    return ptr
 
 
+@deprecated(
+    version="0.1", reason="This function will be removed or changed in a future"
+)
 def assign(ptr, val):
     "Assigns value to pointer"
     try:
         return gbl._assign(ptr, val)
     except AttributeError:
-        assert cppdef(
+        cppdef(
             """
             template<typename T1,typename T2>
             void _assign( T1* ptr, T2&& val ) {
               *ptr = val;
             }
             """
-        ), "Couldn't define _assign"
+        )
         return assign(ptr, val)

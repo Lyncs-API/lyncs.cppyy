@@ -1,7 +1,6 @@
 """
 A Lib class for managing shared libraries
 """
-# pylint: disable=C0303,C0330
 
 import os
 import cppyy
@@ -187,7 +186,7 @@ class Lib:
             cppyy.cppdef(cpp)
 
     def undef(self):
-        "Undefines the list of values in redefined"
+        "UnDefines the list of values in redefined"
         cpp = ""
         for key in self.redefined:
             cpp += f"#undef {key}\n"
@@ -208,12 +207,12 @@ class Lib:
                     except AttributeError:
                         pass
             return getattr(cppyy.gbl, key)
-        except AttributeError:
+        except AttributeError as err:
             try:
                 return self.get_macro(key)
             except ValueError:
                 pass
-            raise
+            raise err
 
     def __setattr__(self, key, value):
         try:
@@ -249,5 +248,5 @@ class Lib:
                     % (key, key)
                 )
                 return self.get_macro(key)
-            except SyntaxError:
-                raise ValueError(f"{key} not found")
+            except SyntaxError as err:
+                raise ValueError(f"{key} not found") from err

@@ -3,7 +3,7 @@ from lyncs_setuptools import setup
 
 setup(
     "lyncs_cppyy",
-    install_requires=["cppyy>=1.8.1", "numpy"],
+    install_requires=["cppyy>=1.8.1", "numpy", "deprecated"],
     keywords=[
         "Lyncs",
         "cppyy",
