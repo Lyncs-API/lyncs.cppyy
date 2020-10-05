@@ -167,6 +167,7 @@ class Lib:
                 raise ImportError(
                     "Library %s not found in paths %s" % (library, self.path)
                 )
+            tmp = os.path.realpath(tmp)
             cppyy.load_library(tmp)
 
         self._loaded = True

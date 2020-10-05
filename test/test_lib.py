@@ -1,3 +1,4 @@
+import os
 import pytest
 import tempfile
 from mesonbuild import mesonmain
@@ -26,8 +27,10 @@ def build_meson(sourcedir):
     return builddir
 
 
+path = build_meson("test/cnumbers")
+
+
 def test_cnumbers():
-    path = build_meson("test/cnumbers")
     cnumbers = Lib(
         header="numbers.h",
         library="libnumbers.so",
@@ -74,6 +77,18 @@ def test_cnumbers():
 
     cppnumbers.GLOBAL = 1
     assert getattr(cnumbers, "global")() == 1
+
+
+def test_symlink():
+    os.symlink("libnumbers.so", path + "/lib/libnumbers2.so")
+    cnumbers = Lib(
+        header="numbers.h",
+        library="libnumbers2.so",
+        c_include=True,
+        check=["zero", "one"],
+        path=path,
+    )
+    assert cnumbers.zero() == 0
 
 
 def test_errors():
