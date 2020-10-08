@@ -2,10 +2,37 @@
 A Lib class for managing shared libraries
 """
 
+import io
 import os
 import cppyy
+from lyncs_utils import redirect_stdout
 
-__all__ = ["Lib"]
+__all__ = [
+    "Lib",
+    "loaded_libraries",
+]
+
+
+def loaded_libraries(short=False):
+    """Returns the list of loaded libraries.
+    If short, then only the names of the libraries without path and extension are returned.
+    """
+    fp = io.StringIO()
+    with redirect_stdout(fp):
+        cppyy.gbl.gSystem.ListLibraries()
+
+    output = fp.getvalue().split("\n")
+    start = output.index("=======================")
+    end = output.index("-----------------------")
+
+    libs = output[start + 1 : end]
+
+    if not short:
+        return libs
+
+    libs = [lib.split("/")[-1].split(".")[0] for lib in libs]
+    libs = ["lib" + lib[2:] if lib.startswith("-l") else lib for lib in libs]
+    return libs
 
 
 class Lib:
@@ -48,6 +75,11 @@ class Lib:
         "c_include",
         "namespace",
         "redefined",
+    ]
+
+    ignore = [
+        "libpthread",
+        "libm",
     ]
 
     @staticmethod
@@ -147,6 +179,10 @@ class Lib:
         # Loading libraries
         for library in self.library:
             if not isinstance(library, str):
+                continue
+            if library.startswith("-l"):
+                library = "lib" + library[2:]
+            if library in Lib.ignore:
                 continue
             try:
                 cppyy.load_library(library)

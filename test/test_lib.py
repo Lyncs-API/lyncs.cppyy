@@ -2,7 +2,7 @@ import os
 import pytest
 import tempfile
 from mesonbuild import mesonmain
-from lyncs_cppyy import Lib, cppdef, gbl
+from lyncs_cppyy import Lib, cppdef, gbl, loaded_libraries
 
 
 def build_meson(sourcedir):
@@ -100,3 +100,8 @@ def test_errors():
 
     with pytest.raises(ValueError):
         Lib().get_macro("FOO")
+
+
+def test_loaded_libraries():
+    assert path + "/libnumbers.so" in loaded_libraries()
+    assert "libnumbers" in loaded_libraries(short=True)
