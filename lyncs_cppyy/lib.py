@@ -2,10 +2,38 @@
 A Lib class for managing shared libraries
 """
 
+import io
 import os
+import warnings
 import cppyy
+from lyncs_utils import redirect_stdout
 
-__all__ = ["Lib"]
+__all__ = [
+    "Lib",
+    "loaded_libraries",
+]
+
+
+def loaded_libraries(short=False):
+    """Returns the list of loaded libraries.
+    If short, then only the names of the libraries without path and extension are returned.
+    """
+    fp = io.StringIO()
+    with redirect_stdout(fp):
+        cppyy.gbl.gSystem.ListLibraries()
+
+    output = fp.getvalue().split("\n")
+    start = output.index("=======================")
+    end = output.index("-----------------------")
+
+    libs = output[start + 1 : end]
+
+    if not short:
+        return libs
+
+    libs = [lib.split("/")[-1].split(".")[0] for lib in libs]
+    libs = ["lib" + lib[2:] if lib.startswith("-l") else lib for lib in libs]
+    return libs
 
 
 class Lib:
@@ -47,7 +75,12 @@ class Lib:
         "check",
         "c_include",
         "namespace",
-        "redefined",
+        "defined",
+    ]
+
+    ignore = [
+        "libpthread",
+        "libm",
     ]
 
     @staticmethod
@@ -69,7 +102,8 @@ class Lib:
         path=".",
         c_include=False,
         namespace=None,
-        redefined=None,
+        defined=None,
+        redefined=None,  # deprecated
     ):
         """
         Initializes a library class that can be pickled.
@@ -92,8 +126,8 @@ class Lib:
         namespace: str or list
           Namespace used across the library. Directly access object inside namespace.
           Similar to `using namespace ...` in c++.
-        redefined: dict
-          List of symbols that have been redefined
+        defined: dict
+          List of symbols that have been defined
         """
 
         self._cwd = os.getcwd()
@@ -105,7 +139,12 @@ class Lib:
         self.include = self.parse_arg(include, "include")
         self.c_include = c_include
         self.namespace = self.parse_arg(namespace, "namespace")
-        self.redefined = dict(redefined or ())
+        self.defined = dict(defined or redefined or ())
+        if redefined:
+            warnings.warn(
+                "The use of redefined is deprecated. Please use defined",
+                DeprecationWarning,
+            )
 
     @property
     def loaded(self):
@@ -148,6 +187,10 @@ class Lib:
         for library in self.library:
             if not isinstance(library, str):
                 continue
+            if library.startswith("-l"):
+                library = "lib" + library[2:]
+            if library in Lib.ignore:
+                continue
             try:
                 cppyy.load_library(library)
                 continue
@@ -167,6 +210,7 @@ class Lib:
                 raise ImportError(
                     "Library %s not found in paths %s" % (library, self.path)
                 )
+            tmp = os.path.realpath(tmp)
             cppyy.load_library(tmp)
 
         self._loaded = True
@@ -178,17 +222,17 @@ class Lib:
             )
 
     def define(self):
-        "Defines the list of values in redefined"
+        "Defines the list of values in defined"
         cpp = ""
-        for key, val in self.redefined.items():
+        for key, val in self.defined.items():
             cpp += f"#define {key} {val}\n"
         if cpp:
             cppyy.cppdef(cpp)
 
     def undef(self):
-        "UnDefines the list of values in redefined"
+        "UnDefines the list of values in defined"
         cpp = ""
-        for key in self.redefined:
+        for key in self.defined:
             cpp += f"#undef {key}\n"
         if cpp:
             cppyy.cppdef(cpp)
@@ -198,8 +242,8 @@ class Lib:
             self.load()
 
         try:
-            if self.redefined:
-                key = self.redefined.get(key, key)
+            if self.defined:
+                key = self.defined.get(key, key)
             if self.namespace:
                 for namespace in self.namespace:
                     try:
@@ -223,8 +267,8 @@ class Lib:
         if not self.loaded:
             self.load()
 
-        if self.redefined:
-            key = self.redefined.get(key, key)
+        if self.defined:
+            key = self.defined.get(key, key)
         if self.namespace:
             for namespace in self.namespace:
                 try:
