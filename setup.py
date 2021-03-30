@@ -17,4 +17,6 @@ setup(
         "test": ["pytest", "pytest-cov", "meson", "ninja"],
     },
     data_files=[("test/cnumbers", glob.glob("test/cnumbers/*"))],
+    package_data={"lyncs_cppyy": ["*.h"]},
+    include_package_data=True,
 )
