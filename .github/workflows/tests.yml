@@ -8,6 +8,10 @@ on:
       - "main"
       - "master"
       - "develop"
+  push:
+    branches:
+      - "main"
+      - "master"
 
 jobs:
   tests:
