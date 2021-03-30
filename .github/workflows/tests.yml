@@ -48,7 +48,6 @@ jobs:
 
       - name: Coverage report
         run: |
-          coverage combine
           coverage report
 
       - name: Upload Coverage report
