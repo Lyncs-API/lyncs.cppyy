@@ -86,13 +86,11 @@ def array_to_pointers(arr):
     return res
 
 
-def to_pointer(ptr: int, ctype: str = "void *", size: int = 1):
+def to_pointer(ptr: int, ctype: str = "void *", size: int = None):
     "Casts integer to void pointer"
     ptr = cast[ctype](ptr)
-    try:
+    if size is not None:
         ptr.reshape((size,))
-    except AttributeError:
-        pass
     return ptr
 
 
