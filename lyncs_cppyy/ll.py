@@ -6,20 +6,14 @@ Additional low-level functions to the one provided by cppyy
 from itertools import product
 from deprecated import deprecated
 from cppyy.ll import __all__
-
-# patch
-if "set_signals_as_exceptionFatalErrorBusError" in __all__:
-    __all__.remove("set_signals_as_exceptionFatalErrorBusError")
-
 from cppyy.ll import *
-from cppyy import cppdef, gbl, sizeof
 
+from cppyy import cppdef, gbl, sizeof
 from .numpy import char_map
 
 __all__ = list(__all__) + [
     "array_to_pointers",
     "to_pointer",
-    "assign",
 ]
 
 
