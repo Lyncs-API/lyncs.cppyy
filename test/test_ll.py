@@ -23,10 +23,3 @@ def test_to_pointer():
     arr = numpy.arange(10)
     ptr = ll.to_pointer(arr.__array_interface__["data"][0], "long*", size=10)
     assert (arr == list(ptr)).all()
-
-
-def test_assign():
-    arr = numpy.arange(1)
-    ptr = ll.to_pointer(arr.__array_interface__["data"][0], "long*", size=10)
-    ll.assign(ptr, 5)
-    assert arr[0] == 5
