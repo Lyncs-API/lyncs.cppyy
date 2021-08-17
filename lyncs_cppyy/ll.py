@@ -81,30 +81,9 @@ def array_to_pointers(arr):
     return res
 """
 
-def to_pointer(ptr: int, ctype: str = "void *", size: int = 1):
+def to_pointer(ptr: int, ctype: str = "void *", size: int = None):
     "Casts integer to void pointer"
     ptr = cast[ctype](ptr)
-    try:
+    if size is not None:
         ptr.reshape((size,))
-    except AttributeError:
-        pass
     return ptr
-
-
-@deprecated(
-    version="0.1", reason="This function will be removed or changed in a future"
-)
-def assign(ptr, val):
-    "Assigns value to pointer"
-    try:
-        return gbl._assign(ptr, val)
-    except AttributeError:
-        cppdef(
-            """
-            template<typename T1,typename T2>
-            void _assign( T1* ptr, T2&& val ) {
-              *ptr = val;
-            }
-            """
-        )
-        return assign(ptr, val)
