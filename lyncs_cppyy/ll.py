@@ -8,15 +8,16 @@ from deprecated import deprecated
 from cppyy.ll import __all__
 from cppyy.ll import *
 
-from cppyy import cppdef, gbl, sizeof
-from .numpy import char_map
+#from cppyy import cppdef, gbl, sizeof
+#from .numpy import char_map
+#from .lib import
 
 __all__ = list(__all__) + [
     "array_to_pointers",
     "to_pointer",
 ]
 
-
+"""
 class PointersArray:
     "Auxiliary class for managing arrays of pointers"
 
@@ -24,7 +25,7 @@ class PointersArray:
         self.ptr = ptr
         self.shape = shape
         self.dtype = dtype
-        self.view = cast[(self.dtype if len(shape) == 1 else "void") + "*"](ptr)
+        self.view = cast[(self.dtype if len(shape) < 1 else "void") + "*"](ptr)
         self.view.reshape((self.shape[0],))
         self.delete = delete
 
@@ -42,15 +43,15 @@ class PointersArray:
 
 
 def array_to_pointers(arr):
-    """
+    ""
     Returns a pointer to a list of pointer that can be used
     for accessing array elements as `ptr[i][j][k]` depending
     on the shape of the array
-    """
-    size = 0
+    ""
     shape = arr.shape
     itemsize = arr.dtype.itemsize
     ctype = char_map[arr.dtype.char]
+    size = 0
     ptr = arr.__array_interface__["data"][0]
     for i in range(len(shape) - 1):
         if i == 0:
@@ -78,7 +79,7 @@ def array_to_pointers(arr):
                 tmp[idxs[-1]] = ptr + ((inn + idxs[-1]) * shape[i + 1]) * itemsize
         skip *= shape[i + 1] + 1
     return res
-
+"""
 
 def to_pointer(ptr: int, ctype: str = "void *", size: int = 1):
     "Casts integer to void pointer"
