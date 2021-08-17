@@ -7,7 +7,7 @@ In this package we provide some additional tools for the usage of
 
 __version__ = "0.1.5"
 
-from cppyy import nullptr, cppdef, gbl, include
+from cppyy import nullptr, cppdef, gbl, include, c_include, set_debug
 from .lib import *
 from . import ll
 

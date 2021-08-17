@@ -4,7 +4,7 @@ from lyncs_setuptools import setup
 setup(
     "lyncs_cppyy",
     install_requires=[
-        "cppyy>=1.8.1",
+        "cppyy>=2.1.0",
         "numpy",
         "deprecated",
         "lyncs_utils",

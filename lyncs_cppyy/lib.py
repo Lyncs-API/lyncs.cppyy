@@ -10,6 +10,7 @@ from lyncs_utils import redirect_stdout
 
 __all__ = [
     "Lib",
+    "lib",
     "loaded_libraries",
 ]
 
@@ -294,3 +295,9 @@ class Lib:
                 return self.get_macro(key)
             except SyntaxError as err:
                 raise ValueError(f"{key} not found") from err
+
+lib = Lib(
+    path=os.path.dirname(os.path.abspath(__file__)),
+    header="lyncs_cppyy.h",
+    namespace="lyncs_cppyy",
+)
