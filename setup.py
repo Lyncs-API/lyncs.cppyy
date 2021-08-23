@@ -18,8 +18,8 @@ setup(
     },
     data_files=[
         ("test/cnumbers", glob.glob("test/cnumbers/*")),
-        ("lyncs_cppyy", glob.glob("lyncs_cppyy/*.h")),
+        ("lyncs_cppyy/include", glob.glob("lyncs_cppyy/include/*.h")),
     ],
-    package_data={"lyncs_cppyy": ["*.h"]},
+    package_data={"lyncs_cppyy": ["include/*.h"]},
     include_package_data=True,
 )
