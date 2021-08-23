@@ -1,4 +1,4 @@
 namespace lyncs_cppyy {
-  #include "flatten.h"
+  #include "utils.h"
   #include "to_pointers.h"
 }
