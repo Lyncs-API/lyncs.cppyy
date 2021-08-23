@@ -296,6 +296,7 @@ class Lib:
             except SyntaxError as err:
                 raise ValueError(f"{key} not found") from err
 
+
 lib = Lib(
     path=os.path.dirname(os.path.abspath(__file__)),
     header="lyncs_cppyy.h",

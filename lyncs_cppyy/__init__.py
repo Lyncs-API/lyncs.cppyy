@@ -10,7 +10,3 @@ __version__ = "0.1.5"
 from cppyy import nullptr, cppdef, gbl, include, c_include, set_debug
 from .lib import *
 from . import ll
-
-# including and aliasing
-include(__path__[0] + "/utils.h")
-make_shared = gbl.lyncs_cppyy_make_shared
