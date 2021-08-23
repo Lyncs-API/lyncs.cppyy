@@ -1,5 +1,6 @@
 import io
-from lyncs_cppyy import cppdef, make_shared, gbl
+from lyncs_cppyy import cppdef, gbl
+from lyncs_cppyy.ll import make_shared
 from lyncs_utils import redirect_stdout
 
 
