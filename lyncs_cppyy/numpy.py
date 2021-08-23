@@ -3,6 +3,7 @@
 __all__ = [
     "dtype_map",
     "char_map",
+    "get_pointer",
 ]
 
 import numpy as np
@@ -46,11 +47,13 @@ dtype_map = (
 
 char_map = {dtype(0).dtype.char: ctype for dtype, ctype in dtype_map}
 
+
 def get_pointer(arr):
     "Returns the pointer of a numpy array"
     ctype = char_map[arr.dtype.char]
     ptr = arr.__array_interface__["data"][0]
-    return to_pointer(ptr, ctype+"*", arr.size)
+    return to_pointer(ptr, ctype + "*", arr.size)
+
 
 def array_to_pointers(arr):
     """
@@ -58,6 +61,4 @@ def array_to_pointers(arr):
     for accessing array elements as `ptr[i][j][k]` depending
     on the shape of the array
     """
-    out = lib.to_pointers(get_pointer(arr), *arr.shape)
-    #out.reshape(arr.shape)
-    return out
+    return lib.to_pointers(get_pointer(arr), *arr.shape)
