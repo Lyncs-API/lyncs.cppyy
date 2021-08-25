@@ -10,9 +10,29 @@ from .lib import lib
 __all__ = list(__all__) + [
     "make_shared",
     "to_pointer",
+    "CastTo",
 ]
 
 make_shared = lib.make_shared
+
+
+def CppType(dtype):
+    """
+    Returns a base class that allows for automatic type conversion calling
+    the look-up method `__cppyy__` to be implemented in the child class.
+
+    ```
+    class Double(CppType("double")):
+
+        def __init__(self, value):
+                super().__init__()
+                self.value=value
+
+        def __cppyy__(self):
+                return self.value
+    ```
+    """
+    return lib.CppType[dtype]
 
 
 def to_pointer(ptr: int, ctype: str = "void *", size: int = None):

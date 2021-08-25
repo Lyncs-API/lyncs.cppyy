@@ -62,3 +62,11 @@ template <typename T>
 auto type_name(T var) {
   return typeid(var).name();
 }
+
+
+// Lookup method for type conversion
+template <typename T>
+struct CppType {
+  virtual T __cppyy__();
+  operator T() {return __cppyy__();}
+};

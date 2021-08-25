@@ -8,3 +8,17 @@ def test_to_pointer():
     arr = numpy.arange(10)
     ptr = ll.to_pointer(arr.__array_interface__["data"][0], "long*", size=10)
     assert (arr == list(ptr)).all()
+
+
+def test_casting():
+    class Double(ll.CppType("double")):
+        def __init__(self, value):
+            super().__init__()
+            self.value = value
+
+        def __cppyy__(self):
+            return self.value
+
+    set_debug()
+    val = Double(1234.5678)
+    assert ll.cast["double"](val) == 1234.5678
