@@ -35,7 +35,6 @@ def test_cnumbers():
         header="numbers.h",
         library="libnumbers.so",
         c_include=True,
-        check=["zero", "one"],
         path=path,
     )
     assert cnumbers.zero() == 0
@@ -63,7 +62,7 @@ def test_cnumbers():
         namespace="numbers",
         include=path + "/include",  # Not needed
         library=Lib(),  # Not needed
-        redefined={"uno": "one", "GBL": "gbl"},
+        defined={"uno": "one", "GBL": "gbl"},
     )
 
     assert cppnumbers.zero["int"]() == 0
@@ -85,7 +84,6 @@ def test_symlink():
         header="numbers.h",
         library="libnumbers2.so",
         c_include=True,
-        check=["zero", "one"],
         path=path,
     )
     assert cnumbers.zero() == 0
@@ -94,9 +92,6 @@ def test_symlink():
 def test_errors():
     with pytest.raises(TypeError):
         Lib(header=[10])
-
-    with pytest.raises(RuntimeError):
-        Lib(check="foo").load()
 
     with pytest.raises(ValueError):
         Lib().get_macro("FOO")

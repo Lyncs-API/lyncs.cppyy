@@ -73,7 +73,6 @@ class Lib:
         "include",
         "header",
         "library",
-        "check",
         "c_include",
         "namespace",
         "defined",
@@ -98,13 +97,12 @@ class Lib:
         self,
         header=None,
         library=None,
-        check=None,
+        check=None,  # deprecated
         include=None,
         path=".",
         c_include=False,
         namespace=None,
         defined=None,
-        redefined=None,  # deprecated
     ):
         """
         Initializes a library class that can be pickled.
@@ -115,8 +113,6 @@ class Lib:
           Header(s) file to include.
         library: str or list
           Library(s) file to include. Also absolute paths are accepted.
-        check: str or list
-          Check function(s) to look for in the library to test if it has been loaded.
         include: str or list
           Path(s) to be included. Equivalent to `-I` used at compile time.
         path: str or list
@@ -136,14 +132,13 @@ class Lib:
         self.path = self.parse_arg(path, "path")
         self.header = self.parse_arg(header, "header")
         self.library = self.parse_arg(library, "library", (str, Lib))
-        self.check = self.parse_arg(check, "check")
         self.include = self.parse_arg(include, "include")
         self.c_include = c_include
         self.namespace = self.parse_arg(namespace, "namespace")
-        self.defined = dict(defined or redefined or ())
-        if redefined:
+        self.defined = dict(defined or ())
+        if check:
             warnings.warn(
-                "The use of redefined is deprecated. Please use defined",
+                "`check` is not employed anymore",
                 DeprecationWarning,
             )
 
@@ -215,12 +210,6 @@ class Lib:
             cppyy.load_library(tmp)
 
         self._loaded = True
-
-        failed_checks = [_ for _ in self.check if not hasattr(self, _)]
-        if failed_checks:
-            raise RuntimeError(
-                f"The following checks have not been found: {failed_checks}"
-            )
 
     def define(self):
         "Defines the list of values in defined"
