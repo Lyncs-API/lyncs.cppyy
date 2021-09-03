@@ -1,11 +1,11 @@
 import os
 import pytest
 import tempfile
-from mesonbuild import mesonmain
 from lyncs_cppyy import Lib, cppdef, gbl, loaded_libraries
 
 
 def build_meson(sourcedir):
+    from mesonbuild import mesonmain
     builddir = tempfile.mkdtemp()
     assert (
         mesonmain.run(
@@ -26,10 +26,15 @@ def build_meson(sourcedir):
     assert mesonmain.run(["install", "-C", builddir], "meson") == 0
     return builddir
 
+try:
+    path = build_meson("test/cnumbers")
+    skip = False
+except ImportError:
+    skip = True
 
-path = build_meson("test/cnumbers")
+skip = pytest.mark.skipif(skip, reason="Meson not available")
 
-
+@skip
 def test_cnumbers():
     cnumbers = Lib(
         header="numbers.h",
@@ -78,6 +83,7 @@ def test_cnumbers():
     assert getattr(cnumbers, "global")() == 1
 
 
+@skip
 def test_symlink():
     os.symlink("libnumbers.so", path + "/lib/libnumbers2.so")
     cnumbers = Lib(
@@ -89,6 +95,7 @@ def test_symlink():
     assert cnumbers.zero() == 0
 
 
+@skip
 def test_errors():
     with pytest.raises(TypeError):
         Lib(header=[10])
@@ -97,6 +104,7 @@ def test_errors():
         Lib().get_macro("FOO")
 
 
+@skip
 def test_loaded_libraries():
     assert path + "/libnumbers.so" in loaded_libraries()
     assert "libnumbers" in loaded_libraries(short=True)
