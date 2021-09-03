@@ -1,11 +1,14 @@
 "Utils for interfacing to numpy"
 
 __all__ = [
-    "dtype_map",
-    "char_map",
+    "get_ctype",
+    "get_numpy_pointer",
+    "array_to_pointers",
 ]
 
 import numpy as np
+from .ll import to_pointer
+from .lib import lib
 
 dtype_map = (
     (np.bool_, "bool"),
@@ -43,3 +46,24 @@ dtype_map = (
 )
 
 char_map = {dtype(0).dtype.char: ctype for dtype, ctype in dtype_map}
+
+
+def get_ctype(dtype):
+    "Returns the C type of the given dtype"
+    return char_map[np.dtype(dtype).char]
+
+
+def get_numpy_pointer(arr):
+    "Returns the pointer of a numpy array"
+    ctype = get_ctype(arr.dtype)
+    ptr = arr.__array_interface__["data"][0]
+    return to_pointer(ptr, ctype + "*", arr.size)
+
+
+def array_to_pointers(arr):
+    """
+    Returns a pointer to a list of pointers that can be used
+    for accessing array elements as `ptr[i][j][k]` depending
+    on the shape of the array
+    """
+    return lib.to_pointers(get_numpy_pointer(arr), *arr.shape)
