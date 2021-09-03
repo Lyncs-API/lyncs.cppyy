@@ -9,4 +9,5 @@ __version__ = "0.1.5"
 
 from cppyy import nullptr, cppdef, gbl, include, c_include, set_debug
 from .lib import *
+from .numpy import *
 from . import ll

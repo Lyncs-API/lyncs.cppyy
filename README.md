@@ -9,7 +9,9 @@
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg?logo=codefactor&logoColor=white)](https://github.com/ambv/black)
 
 
-In this package we provide some additional tools for the usage of [cppyy] in the Lyncs API.
+In this package we provide some additional features to [cppyy].
+
+[cppyy]: https://cppyy.readthedocs.io/en/latest/
 
 ## Installation
 
@@ -80,5 +82,11 @@ The list of options of `Lib` are:
 
 - `redefined`: dictionary of redefined symbols. See [Redefining symbols to avoid conflicts].
 
+### Other functions
 
-[cppyy]: https://cppyy.readthedocs.io/en/latest/
+- `loaded_libraries()`: Returns the list of loaded libraries
+- `to_pointer(ptr, ctype="void *")`: Converts an integer (ptr) to cppyy pointer
+- `CppType(ctype)`: Generates a base class that allows for automatic type conversion calling
+  the look-up method `__cppyy__`
+- `array_to_pointers(arr)`: Creates a c-style array of pointers to be used for accessing the elements
+  of a numpy-like array.
