@@ -67,6 +67,7 @@ auto type_name(T var) {
 // Lookup method for type conversion
 template <typename T>
 struct CppType {
+  virtual ~CppType(){}
   virtual T __cppyy__();
   operator T() {return __cppyy__();}
 };
