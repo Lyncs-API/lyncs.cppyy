@@ -14,7 +14,7 @@ setup(
         "cppyy",
     ],
     extras_require={
-        "test": ["pytest", "pytest-cov", "meson"],
+        "test": ["pytest", "pytest-cov", "meson", "ninja"],
     },
     data_files=[
         ("test/cnumbers", glob.glob("test/cnumbers/*")),
