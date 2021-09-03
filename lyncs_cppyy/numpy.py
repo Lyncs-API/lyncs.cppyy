@@ -47,8 +47,10 @@ dtype_map = (
 
 char_map = {dtype(0).dtype.char: ctype for dtype, ctype in dtype_map}
 
+
 def get_ctype(dtype):
     return char_map[np.dtype(dtype).char]
+
 
 def get_numpy_pointer(arr):
     "Returns the pointer of a numpy array"

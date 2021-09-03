@@ -10,7 +10,7 @@ from .lib import lib
 __all__ = list(__all__) + [
     "make_shared",
     "to_pointer",
-    "CastTo",
+    "CppType",
 ]
 
 make_shared = lib.make_shared

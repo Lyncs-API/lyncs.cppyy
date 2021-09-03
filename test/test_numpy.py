@@ -1,5 +1,5 @@
 import numpy
-from lyncs_cppyy import ll, cppdef, include, gbl, lib, set_debug
+from lyncs_cppyy import ll, cppdef, include, gbl, lib
 from lyncs_cppyy.numpy import array_to_pointers
 
 

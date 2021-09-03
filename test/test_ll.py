@@ -1,6 +1,6 @@
 from itertools import product
 import numpy
-from lyncs_cppyy import ll, cppdef, include, gbl, set_debug, lib
+from lyncs_cppyy import ll, cppdef, include, gbl, lib
 from lyncs_cppyy.numpy import array_to_pointers
 
 
@@ -19,6 +19,5 @@ def test_casting():
         def __cppyy__(self):
             return self.value
 
-    set_debug()
     val = Double(1234.5678)
     assert ll.cast["double"](val) == 1234.5678
