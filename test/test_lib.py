@@ -6,6 +6,7 @@ from lyncs_cppyy import Lib, cppdef, gbl, loaded_libraries
 
 def build_meson(sourcedir):
     from mesonbuild import mesonmain
+
     builddir = tempfile.mkdtemp()
     assert (
         mesonmain.run(
@@ -26,6 +27,7 @@ def build_meson(sourcedir):
     assert mesonmain.run(["install", "-C", builddir], "meson") == 0
     return builddir
 
+
 try:
     path = build_meson("test/cnumbers")
     skip = False
@@ -33,6 +35,7 @@ except ImportError:
     skip = True
 
 skip = pytest.mark.skipif(skip, reason="Meson not available")
+
 
 @skip
 def test_cnumbers():
