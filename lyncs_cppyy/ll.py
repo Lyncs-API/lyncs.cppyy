@@ -37,7 +37,7 @@ def CppType(dtype):
 
 def to_pointer(ptr: int, ctype: str = "void *", size: int = None):
     "Casts integer to void pointer"
-    ptr = cast[ctype](ptr)
+    ptr = reinterpret_cast[ctype](ptr)
     if size is not None:
         ptr.reshape((size,))
     return ptr

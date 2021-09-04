@@ -10,9 +10,10 @@ import numpy as np
 from .ll import to_pointer
 from .lib import lib
 
+# NOTE: commented out cases that are not working
 dtype_map = (
     (np.bool_, "bool"),
-    (np.byte, "signed char"),
+    # (np.byte, "signed char"),
     (np.ubyte, "unsigned char"),
     (np.short, "short"),
     (np.ushort, "unsigned short"),
@@ -22,14 +23,14 @@ dtype_map = (
     (np.uint, "unsigned long"),
     (np.longlong, "long long"),
     (np.ulonglong, "unsigned long long"),
-    (np.half, ""),
+    # (np.half, ""),
     (np.single, "float"),
     (np.double, "double"),
     (np.longdouble, "long double"),
-    (np.csingle, "float complex"),
-    (np.cdouble, "double complex"),
-    (np.clongdouble, "long double complex"),
-    (np.int8, "int8_t"),
+    (np.csingle, "std::complex<float>"),
+    (np.cdouble, "std::complex<double>"),
+    # (np.clongdouble, "std::complex<long double>"),
+    # (np.int8, "int8_t"),
     (np.int16, "int16_t"),
     (np.int32, "int32_t"),
     (np.int64, "int64_t"),
@@ -41,8 +42,8 @@ dtype_map = (
     (np.uintp, "uintptr_t"),
     (np.float32, "float"),
     (np.float64, "double"),
-    (np.complex64, "float complex"),
-    (np.complex128, "double complex"),
+    (np.complex64, "std::complex<float>"),
+    (np.complex128, "std::complex<double>"),
 )
 
 char_map = {dtype(0).dtype.char: ctype for dtype, ctype in dtype_map}
