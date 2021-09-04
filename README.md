@@ -5,11 +5,13 @@
 [![license](https://img.shields.io/github/license/Lyncs-API/lyncs.cppyy?logo=github&logoColor=white)](https://github.com/Lyncs-API/lyncs.cppyy/blob/master/LICENSE)
 [![build & test](https://img.shields.io/github/workflow/status/Lyncs-API/lyncs.cppyy/build%20&%20test?logo=github&logoColor=white)](https://github.com/Lyncs-API/lyncs.cppyy/actions)
 [![codecov](https://img.shields.io/codecov/c/github/Lyncs-API/lyncs.cppyy?logo=codecov&logoColor=white)](https://codecov.io/gh/Lyncs-API/lyncs.cppyy)
-[![pylint](https://img.shields.io/badge/pylint%20score-8.5%2F10-yellowgreen?logo=python&logoColor=white)](http://pylint.pycqa.org/)
+[![pylint](https://img.shields.io/badge/pylint%20score-9.4%2F10-green?logo=python&logoColor=white)](http://pylint.pycqa.org/)
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg?logo=codefactor&logoColor=white)](https://github.com/ambv/black)
 
 
-In this package we provide some additional tools for the usage of [cppyy] in the Lyncs API.
+In this package we provide some additional features to [cppyy].
+
+[cppyy]: https://cppyy.readthedocs.io/en/latest/
 
 ## Installation
 
@@ -54,16 +56,15 @@ In lyncs_cppyy we have define the class Lib for holding the information on a lib
 Lib returns a variable that represents the library.
 The library is loaded at the first usage of the variable.
 In most of the cases, accessing attributes of the variable is like accessing attributed of `cppyy.gbl`.
-Exceptions are made for the following options of Lib, e.g. `zlib.header -> ['zlib.h']`,
-or for macros defined in the header, e.g. `zlib.ZLIB_VERSION -> '1.2.11'`.
-This latter feature is not supported by cppyy.gbl.
+Exceptions are made for
 
-The list of options of `Lib` are:
+- macros defined in the headers, e.g. `zlib.ZLIB_VERSION -> '1.2.11'`
+- functions defined under a namespace which can be directly accessed specifying a namespace
+- and the following attributes of Lib, e.g. `zlib.header -> ['zlib.h']`.
+
+The list of attributes and initialization options of `Lib` are:
 
 - `header`: string(or list) of the header(s) to be included.
-
-- `check`: string(or list) of the function(s) to be checked for inclusion.
-  This is needed to determine if the library has been already loaded or not.
 
 - `library`: string(or list) of the shared library(ies) to be loaded.
   A library can also be an instance of the `Lib` class.
@@ -78,7 +79,13 @@ The list of options of `Lib` are:
 
 - `include`: string(or list) of the directory(ies) to include. Equivalent to `-I` used at compile time.
 
-- `redefined`: dictionary of redefined symbols. See [Redefining symbols to avoid conflicts].
+- `defined`: dictionary of aliases that act as defined macros.
 
+### Other functions
 
-[cppyy]: https://cppyy.readthedocs.io/en/latest/
+- `loaded_libraries()`: Returns the list of loaded libraries
+- `to_pointer(ptr, ctype="void *")`: Converts an integer (ptr) to cppyy pointer
+- `CppType(ctype)`: Generates a base class that allows for automatic type conversion calling
+  the look-up method `__cppyy__`. See its doc for more details.
+- `array_to_pointers(arr)`: Creates a c-style array of pointers to be used for accessing the elements
+  of a numpy-like array.
