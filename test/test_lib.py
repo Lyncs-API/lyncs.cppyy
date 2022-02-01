@@ -67,7 +67,7 @@ def test_cnumbers():
     cppnumbers = Lib(
         header="numbers.hpp",
         path=path,
-        namespace="numbers",
+        namespace=["numbers", "numbers.another"],
         include=path + "/include",  # Not needed
         library=Lib(),  # Not needed
         defined={"uno": "one", "GBL": "gbl"},
@@ -76,6 +76,7 @@ def test_cnumbers():
     assert cppnumbers.zero["int"]() == 0
     assert cppnumbers.one["long"]() == 1
     assert cppnumbers.uno["long"]() == 1
+    assert cppnumbers.two["int"]() == 2
 
     assert cppnumbers.ONE == 1
 

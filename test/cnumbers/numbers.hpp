@@ -16,4 +16,11 @@ namespace numbers {
   T global() {
     return (T) gbl;
   }  
+
+  namespace another {
+    template<typename T>
+    T two() {
+      return (T) 2;
+    }
+  }
 }
