@@ -227,6 +227,22 @@ class Lib:
         if cpp:
             cppyy.cppdef(cpp)
 
+    def get_namespace(self, namespace):
+        "Returns a view of the library at a given namespace"
+        parts = namespace.replace("::", ".").split(".")
+        out = cppyy.gbl
+        for part in parts:
+            out = getattr(out, part)
+        return out
+
+    def namespace_loop(self):
+        "Loops over all the given namespace"
+        for namespace in self.namespace:
+            try:
+                yield self.get_namespace(namespace)
+            except AttributeError:
+                pass
+
     def __getattr__(self, key):
         if not self.loaded:
             self.load()
@@ -235,9 +251,9 @@ class Lib:
             if self.defined:
                 key = self.defined.get(key, key)
             if self.namespace:
-                for namespace in self.namespace:
+                for namespace in self.namespace_loop():
                     try:
-                        return getattr(getattr(cppyy.gbl, namespace), key)
+                        return getattr(namespace, key)
                     except AttributeError:
                         pass
             return getattr(cppyy.gbl, key)
@@ -260,10 +276,10 @@ class Lib:
         if self.defined:
             key = self.defined.get(key, key)
         if self.namespace:
-            for namespace in self.namespace:
+            for namespace in self.namespace_loop():
                 try:
-                    getattr(getattr(cppyy.gbl, namespace), key)
-                    return setattr(getattr(cppyy.gbl, namespace), key, value)
+                    getattr(namespace, key)
+                    return setattr(namespace, key, value)
                 except AttributeError:
                     pass
         getattr(cppyy.gbl, key)
