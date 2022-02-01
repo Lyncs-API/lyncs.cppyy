@@ -19,11 +19,11 @@ def loaded_libraries(short=False):
     """Returns the list of loaded libraries.
     If short, then only the names of the libraries without path and extension are returned.
     """
-    fp = io.StringIO()
-    with redirect_stdout(fp):
+    stream = io.StringIO()
+    with redirect_stdout(stream):
         cppyy.gbl.gSystem.ListLibraries()
 
-    output = fp.getvalue().split("\n")
+    output = stream.getvalue().split("\n")
     start = output.index("=======================")
     end = output.index("-----------------------")
 
